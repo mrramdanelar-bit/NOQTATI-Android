@@ -1,4 +1,6 @@
+
 package com.example
+
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -85,8 +87,34 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // STEP 1: Configure Firebase App Check with launch intent before UI, ViewModels, or AI calls
-        configureAppCheck(this, intent)
+        // Configure Firebase App Check
+        val debugToken = configureAppCheck(this, intent)
+
+        // Show the Debug Token so it can be copied
+        if (BuildConfig.DEBUG && !debugToken.isNullOrBlank()) {
+            AlertDialog.Builder(this)
+                .setTitle("رمز Firebase App Check")
+                .setMessage(debugToken)
+                .setPositiveButton("نسخ الرمز") { _, _ ->
+                    val clipboard =
+                        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+                    clipboard.setPrimaryClip(
+                        ClipData.newPlainText(
+                            "Firebase Debug Token",
+                            debugToken
+                        )
+                    )
+
+                    Toast.makeText(
+                        this,
+                        "تم نسخ الرمز",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .setNegativeButton("إغلاق", null)
+                .show()
+        }
 
         enableEdgeToEdge()
 
