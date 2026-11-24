@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Academic Grade Sheet / Ledger Card (centered in 66dp safe zone: x=26..76, y=24..80) -->
+    <path
+        android:fillColor="#FFF8FBF9"
+        android:pathData="M31,26 L67,26 C70.3,26 73,28.7 73,32 L73,74 C73,77.3 70.3,80 67,80 L31,80 C27.7,80 25,77.3 25,74 L25,32 C25,28.7 27.7,26 31,26 Z" />
+
+    <!-- Bookmark Ribbon at top -->
+    <path
+        android:fillColor="#FFE2A83B"
+        android:pathData="M33,26 L42,26 L42,40 L37.5,36.5 L33,40 Z" />
+
+    <!-- Grade Lines inside ledger -->
+    <path
+        android:fillColor="#FF0F6B5E"
+        android:pathData="M47,36 L65,36 C66.1,36 67,36.9 67,38 C67,39.1 66.1,40 65,40 L47,40 C45.9,40 45,39.1 45,38 C45,36.9 45.9,36 47,36 Z" />
+    <path
+        android:fillColor="#FF7BB8AE"
+        android:pathData="M33,48 L65,48 C66.1,48 67,48.9 67,50 C67,51.1 66.1,52 65,52 L33,52 C31.9,52 31,51.1 31,50 C31,48.9 31.9,48 33,48 Z" />
+    <path
+        android:fillColor="#FF7BB8AE"
+        android:pathData="M33,58 L55,58 C56.1,58 57,58.9 57,60 C57,61.1 56.1,62 55,62 L33,62 C31.9,62 31,61.1 31,60 C31,58.9 31.9,58 33,58 Z" />
+    <path
+        android:fillColor="#FFB7DCD5"
+        android:pathData="M33,68 L49,68 C50.1,68 51,68.9 51,70 C51,71.1 50.1,72 49,72 L33,72 C31.9,72 31,71.1 31,70 C31,68.9 31.9,68 33,68 Z" />
+
+    <!-- Golden Verification Seal Circle -->
+    <path
+        android:fillColor="#FF0A4D43"
+        android:pathData="M71,56 A15,15 0 1,1 70.99,56 Z" />
+    <path
+        android:fillColor="#FFE6AE4C"
+        android:pathData="M71,58 A13,13 0 1,1 70.99,58 Z" />
+
+    <!-- Crisp Checkmark inside Gold Seal -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M65,71 L69.2,75.2 L77.5,66.2"
+        android:strokeWidth="3.2"
+        android:strokeColor="#FF083D35"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

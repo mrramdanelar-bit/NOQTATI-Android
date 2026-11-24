@@ -1,0 +1,6 @@
+{
+  "name": "NOQTATI – نقطتي",
+  "description": "تطبيق إدارة الأقسام والتلاميذ والعلامات وحساب المعدلات والتصوير الذكي لكشوف النقاط للأساتذة في الجزائر",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
