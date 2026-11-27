@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ai.configureAppCheck
+import com.example.ai.requestDebugAppCheckSecret
 import com.example.data.preferences.ThemeMode
 import com.example.export.FileShareHelper
 import com.example.ui.AppDestination
@@ -97,6 +98,32 @@ class MainActivity : ComponentActivity() {
                 .setMessage(firebaseInitError)
                 .setPositiveButton("موافق", null)
                 .show()
+        }
+
+        if (BuildConfig.DEBUG && firebaseInitError.isNullOrBlank()) {
+            requestDebugAppCheckSecret(this) { debugSecret ->
+                runOnUiThread {
+                    val message = if (debugSecret.isNullOrBlank()) {
+                        "لم يتمكن التطبيق من قراءة رمز Debug المحلي. أرسل لي هذه النتيجة."
+                    } else {
+                        "هذا هو رمز Debug الحقيقي الذي ولّده Firebase على هاتفك.\n\n" +
+                            debugSecret +
+                            "\n\nسجّل هذا الرمز نفسه في Firebase Console ضمن تطبيق Android الخاص بنقطتي، ثم جرّب التصوير الذكي."
+                    }
+                    AlertDialog.Builder(this)
+                        .setTitle("تشخيص Firebase App Check")
+                        .setMessage(message)
+                        .setPositiveButton("نسخ الرمز") { _, _ ->
+                            if (!debugSecret.isNullOrBlank()) {
+                                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(ClipData.newPlainText("App Check Debug Token", debugSecret))
+                                Toast.makeText(this, "تم نسخ الرمز", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        .setNegativeButton("إغلاق", null)
+                        .show()
+                }
+            }
         }
 
         enableEdgeToEdge()
