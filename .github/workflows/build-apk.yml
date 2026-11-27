@@ -47,6 +47,7 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
+      # Rebuild after registering the Firebase App Check debug token.
       - name: Build Debug APK
         env:
           APP_CHECK_DEBUG_TOKEN: ${{ secrets.APP_CHECK_DEBUG_TOKEN }}
