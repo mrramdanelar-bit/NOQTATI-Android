@@ -20,6 +20,11 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    // Debug-only App Check token is injected from GitHub Actions Secrets.
+    // Never store the token in source control.
+    manifestPlaceholders["firebaseAppCheckDebugSecret"] =
+      System.getenv("APP_CHECK_DEBUG_TOKEN") ?: ""
   }
 
   // Do not remove or modify these signingConfigs. They are necessary for building, installing,
