@@ -232,7 +232,7 @@ class SmartGradeScanner {
             val userMessage =
                 "تعذر تحليل الصورة عبر الذكاء الاصطناعي. يمكنك استخدام الوضع الأساسي دون إنترنت."
             val debugDetails = if (BuildConfig.DEBUG) {
-                "\\n\\nتفاصيل التشخيص (Debug):\\n${AiDiagnostics.format(e)}"
+                "\n\nتفاصيل التشخيص (Debug):\n${AiDiagnostics.format(e)}"
             } else {
                 ""
             }
