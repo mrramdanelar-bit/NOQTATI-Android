@@ -439,7 +439,7 @@ class NoqtatiViewModel(application: Application) : AndroidViewModel(application)
             } catch (e: Exception) {
                 Log.e(TAG, "Unexpected error in analyzeCapturedImageWithAi", e)
                 val debugDetails = if (BuildConfig.DEBUG) {
-                    "\\n\\nتفاصيل التشخيص (Debug):\\n${AiDiagnostics.format(e)}"
+                    "\n\nتفاصيل التشخيص (Debug):\n${AiDiagnostics.format(e)}"
                 } else {
                     ""
                 }
