@@ -7,6 +7,7 @@ import com.example.BuildConfig
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 
 private const val TAG = "AppCheckInit"
 
@@ -44,15 +45,23 @@ fun configureAppCheck(context: Context, intent: Intent?): String? {
             }
         }
 
-        FirebaseAppCheck.getInstance(firebaseApp).installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-        )
+        val appCheck = FirebaseAppCheck.getInstance(firebaseApp)
+        if (BuildConfig.DEBUG) {
+            appCheck.installAppCheckProviderFactory(
+                DebugAppCheckProviderFactory.getInstance()
+            )
+            Log.i(TAG, "Firebase Debug App Check provider installed for debug build.")
+        } else {
+            appCheck.installAppCheckProviderFactory(
+                PlayIntegrityAppCheckProviderFactory.getInstance()
+            )
+            Log.i(TAG, "Firebase Play Integrity App Check provider installed for release build.")
+        }
 
         Log.i(
             TAG,
             "Firebase initialized successfully. projectId=${firebaseApp.options.projectId}"
         )
-        Log.i(TAG, "Firebase Debug App Check provider installed.")
         null
     } catch (e: Exception) {
         Log.e(TAG, "Firebase initialization/App Check setup failed", e)
@@ -74,7 +83,13 @@ fun requestDebugAppCheckSecret(context: Context, onReady: (String?) -> Unit) {
 
     val firebaseApp = FirebaseApp.getInstance()
     FirebaseAppCheck.getInstance(firebaseApp).getToken(false)
-        .addOnCompleteListener {
+        .addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.e(TAG, "Failed to request an App Check token for debug diagnostics", task.exception)
+                onReady(null)
+                return@addOnCompleteListener
+            }
+
             val preferencesName =
                 "com.google.firebase.appcheck.debug.store.${firebaseApp.persistenceKey}"
             val secret = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
