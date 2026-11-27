@@ -24,20 +24,24 @@ fun configureAppCheck(context: Context, intent: Intent?): String? {
                     "ومن تطابق اسم الحزمة مع التطبيق."
             )
 
-        if (BuildConfig.DEBUG && BuildConfig.APP_CHECK_DEBUG_TOKEN.isNotBlank()) {
-            // Firebase Android's Debug provider currently has no public runtime API
-            // for supplying a fixed token. This uses the provider's documented-in-issue
-            // persistence key workaround; it may need updating if Firebase changes it.
-            val preferencesName =
-                "com.google.firebase.appcheck.debug.store.${firebaseApp.persistenceKey}"
-            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
-                .edit()
-                .putString(
-                    "com.google.firebase.appcheck.debug.DEBUG_SECRET",
-                    BuildConfig.APP_CHECK_DEBUG_TOKEN
-                )
-                .commit()
-            Log.i(TAG, "A registered Firebase App Check debug token was configured.")
+        if (BuildConfig.DEBUG) {
+            // Clear the previously injected placeholder exactly once. The official
+            // Debug provider will then generate and persist its own real device token.
+            val migrationPrefs = context.getSharedPreferences(
+                "noqtati_appcheck_migration",
+                Context.MODE_PRIVATE
+            )
+            if (!migrationPrefs.getBoolean("cleared_placeholder_token_v1", false)) {
+                val debugPreferencesName =
+                    "com.google.firebase.appcheck.debug.store.${firebaseApp.persistenceKey}"
+                context.getSharedPreferences(debugPreferencesName, Context.MODE_PRIVATE)
+                    .edit()
+                    .remove("com.google.firebase.appcheck.debug.DEBUG_SECRET")
+                    .commit()
+                migrationPrefs.edit()
+                    .putBoolean("cleared_placeholder_token_v1", true)
+                    .commit()
+            }
         }
 
         FirebaseAppCheck.getInstance(firebaseApp).installAppCheckProviderFactory(
@@ -55,4 +59,26 @@ fun configureAppCheck(context: Context, intent: Intent?): String? {
         "تعذرت تهيئة Firebase: ${e.localizedMessage ?: e.javaClass.simpleName}. " +
             "تحقق من إعدادات Firebase واتصال الإنترنت."
     }
+}
+
+/**
+ * Forces the official Debug provider to create/load its device token, then returns
+ * the local debug secret so a tester can register that exact value in Firebase Console.
+ * This is available only in debug builds and must never be shown in production.
+ */
+fun requestDebugAppCheckSecret(context: Context, onReady: (String?) -> Unit) {
+    if (!BuildConfig.DEBUG) {
+        onReady(null)
+        return
+    }
+
+    val firebaseApp = FirebaseApp.getInstance()
+    FirebaseAppCheck.getInstance(firebaseApp).getToken(false)
+        .addOnCompleteListener {
+            val preferencesName =
+                "com.google.firebase.appcheck.debug.store.${firebaseApp.persistenceKey}"
+            val secret = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+                .getString("com.google.firebase.appcheck.debug.DEBUG_SECRET", null)
+            onReady(secret)
+        }
 }
