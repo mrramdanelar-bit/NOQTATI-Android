@@ -139,7 +139,7 @@ class SmartGradeScanner {
                 5. لا تختلق أسماء أو علامات غير موجودة في الصورة.
             """.trimIndent()
 
-            val response = withTimeout(60_000L) {
+            val response = withTimeout(120_000L) {
                 generativeModel.generateContent(
                     content {
                         image(bitmap)
@@ -223,7 +223,7 @@ class SmartGradeScanner {
             }
         } catch (e: TimeoutCancellationException) {
             Log.e(TAG, "Gemini OCR timed out", e)
-            ScanOutcome.Error("انتهت مهلة تحليل الصورة (60 ثانية). تحقق من الاتصال بالإنترنت أو استخدم الوضع الأساسي دون إنترنت.")
+            ScanOutcome.Error("انتهت مهلة تحليل الصورة (120 ثانية). تحقق من الاتصال بالإنترنت أو استخدم الوضع الأساسي دون إنترنت.")
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
