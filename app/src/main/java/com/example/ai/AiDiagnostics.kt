@@ -42,7 +42,7 @@ object AiDiagnostics {
             .replace(Regex("AIza[0-9A-Za-z_-]{20,}"), "[REDACTED_API_KEY]")
             .replace(
                 Regex("(?i)(debug[_ -]?token|api[_ -]?key|access[_ -]?token)\\s*[:=]\\s*[^\\s,;]+"),
-                "$1=[REDACTED]"
+                "\$1=[REDACTED]"
             )
     }
 }
