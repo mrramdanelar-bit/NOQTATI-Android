@@ -88,31 +88,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Configure Firebase App Check
-        val debugToken = configureAppCheck(this, intent)
+        val firebaseInitError = configureAppCheck(this, intent)
 
-        // Show the Debug Token so it can be copied
-        if (BuildConfig.DEBUG && !debugToken.isNullOrBlank()) {
+        // Never hide Firebase startup failures: show a clear diagnostic in debug builds.
+        if (BuildConfig.DEBUG && !firebaseInitError.isNullOrBlank()) {
             AlertDialog.Builder(this)
-                .setTitle("رمز Firebase App Check")
-                .setMessage(debugToken)
-                .setPositiveButton("نسخ الرمز") { _, _ ->
-                    val clipboard =
-                        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
-                    clipboard.setPrimaryClip(
-                        ClipData.newPlainText(
-                            "Firebase Debug Token",
-                            debugToken
-                        )
-                    )
-
-                    Toast.makeText(
-                        this,
-                        "تم نسخ الرمز",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                .setNegativeButton("إغلاق", null)
+                .setTitle("مشكلة في تهيئة Firebase")
+                .setMessage(firebaseInitError)
+                .setPositiveButton("موافق", null)
                 .show()
         }
 
