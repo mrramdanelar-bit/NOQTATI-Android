@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.util.Log
+import com.example.BuildConfig
 import com.example.data.local.StudentEntity
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
@@ -228,9 +229,14 @@ class SmartGradeScanner {
             throw e
         } catch (e: Exception) {
             Log.e(TAG, "Gemini OCR failed", e)
-            ScanOutcome.Error(
-                "تعذر تحليل الصورة عبر الذكاء الاصطناعي: ${e.localizedMessage ?: "خطأ غير متوقع"}. يمكنك استخدام الوضع الأساسي دون إنترنت."
-            )
+            val userMessage =
+                "تعذر تحليل الصورة عبر الذكاء الاصطناعي. يمكنك استخدام الوضع الأساسي دون إنترنت."
+            val debugDetails = if (BuildConfig.DEBUG) {
+                "\\n\\nتفاصيل التشخيص (Debug):\\n${AiDiagnostics.format(e)}"
+            } else {
+                ""
+            }
+            ScanOutcome.Error(userMessage + debugDetails)
         }
     }
 
