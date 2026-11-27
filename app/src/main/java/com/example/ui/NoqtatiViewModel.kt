@@ -3,6 +3,8 @@ package com.example.ui
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import com.example.BuildConfig
+import com.example.ai.AiDiagnostics
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ai.ExtractedGradeRow
@@ -436,10 +438,15 @@ class NoqtatiViewModel(application: Application) : AndroidViewModel(application)
                 throw e
             } catch (e: Exception) {
                 Log.e(TAG, "Unexpected error in analyzeCapturedImageWithAi", e)
+                val debugDetails = if (BuildConfig.DEBUG) {
+                    "\\n\\nتفاصيل التشخيص (Debug):\\n${AiDiagnostics.format(e)}"
+                } else {
+                    ""
+                }
                 _scannerState.update {
                     it.copy(
                         isAnalyzing = false,
-                        errorMessage = e.localizedMessage ?: "حدث خطأ غير متوقع أثناء التحليل."
+                        errorMessage = "حدث خطأ غير متوقع أثناء التحليل." + debugDetails
                     )
                 }
             }
