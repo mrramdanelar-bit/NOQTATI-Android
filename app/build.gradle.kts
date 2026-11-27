@@ -48,13 +48,6 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
-      // Inject only through the protected GitHub Actions secret; never commit the token.
-      val appCheckDebugToken = System.getenv("APP_CHECK_DEBUG_TOKEN") ?: ""
-      buildConfigField(
-        "String",
-        "APP_CHECK_DEBUG_TOKEN",
-        "\"${appCheckDebugToken}\""
-      )
       signingConfig = signingConfigs.getByName("debugConfig")
     }
   }
