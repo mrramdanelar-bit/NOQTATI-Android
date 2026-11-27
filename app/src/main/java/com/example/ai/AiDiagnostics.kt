@@ -1,7 +1,6 @@
 package com.example.ai
 
 import android.util.Log
-import com.google.firebase.FirebaseException
 
 /**
  * Formats actionable Firebase/AI failures for debug builds.
@@ -20,8 +19,11 @@ object AiDiagnostics {
             val message = redact(rawMessage).ifBlank { "(no message)" }
             parts += "Cause ${depth + 1}: $type\nMessage: $message"
 
-            if (current is FirebaseException) {
-                parts += "Firebase errorCode: ${redact(current.errorCode)}"
+            val statusCode = Regex(
+                "(?i)(?:HTTP|status(?: code)?)\\D{0,8}([1-5][0-9]{2})"
+            ).find(rawMessage)?.groupValues?.getOrNull(1)
+            if (statusCode != null) {
+                parts += "HTTP/status code: $statusCode"
             }
 
             current = current.cause
