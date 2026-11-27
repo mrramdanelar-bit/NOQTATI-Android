@@ -48,6 +48,8 @@ jobs:
           fi
 
       - name: Build Debug APK
+        env:
+          APP_CHECK_DEBUG_TOKEN: ${{ secrets.APP_CHECK_DEBUG_TOKEN }}
         run: gradle assembleDebug --stacktrace
 
       - name: Upload Debug APK Artifact
