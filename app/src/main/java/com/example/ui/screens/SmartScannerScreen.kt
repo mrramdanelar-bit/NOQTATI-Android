@@ -1,6 +1,9 @@
 package com.example.ui.screens
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.widget.Toast
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -65,6 +68,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
+import com.example.BuildConfig
 import com.example.ai.ExtractedGradeRow
 import com.example.ai.ExtractionConfidence
 import com.example.ai.SmartGradeScanner
@@ -472,6 +476,22 @@ fun SmartScannerScreen(
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onErrorContainer
                             )
+                        }
+                        if (BuildConfig.DEBUG) {
+                            OutlinedButton(
+                                onClick = {
+                                    val clipboard = context.getSystemService(ClipboardManager::class.java)
+                                    clipboard?.setPrimaryClip(
+                                        ClipData.newPlainText(
+                                            "NOQTATI AI diagnostics",
+                                            scannerState.errorMessage.orEmpty()
+                                        )
+                                    )
+                                    Toast.makeText(context, "تم نسخ تفاصيل التشخيص", Toast.LENGTH_SHORT).show()
+                                }
+                            ) {
+                                Text("نسخ تفاصيل الخطأ")
+                            }
                         }
                         if (!scannerState.useOfflineMode) {
                             OutlinedButton(onClick = { onToggleOfflineMode(true) }) {
