@@ -20,7 +20,6 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    buildConfigField("String", "APP_CHECK_DEBUG_TOKEN", "\"\"")
   }
 
   // Do not remove or modify these signingConfigs. They are necessary for building,
