@@ -54,7 +54,7 @@ android {
       buildConfigField(
         "String",
         "APP_CHECK_DEBUG_TOKEN",
-        "\"\"${appCheckDebugToken.replace("\\", "\\\\").replace("\"", "\\\"")}\""
+        "\"${appCheckDebugToken}\""
       )
       signingConfig = signingConfigs.getByName("debugConfig")
     }
